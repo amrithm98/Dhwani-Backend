@@ -1,9 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('dhwani', 'root', 'linux4amrc');
+var sequelize = new Sequelize('dhwani', 'juggleclouds', 'youcanthackthis');
 var app = express();
-var port = 3000;
+var port = 11000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
