@@ -32,7 +32,8 @@ var user = sequelize.define('user', {
     accomodation: Sequelize.ENUM('YES', 'NO'),
     sex: Sequelize.ENUM('MALE', 'FEMALE', 'OTHER'),
     phone: { type: Sequelize.STRING(20), unique: true },
-    events: Sequelize.STRING
+    events: Sequelize.STRING,
+    eventNames: Sequelize.STRING
 });
 var eventsTable = sequelize.define('eventsTable', {
     eventId: Sequelize.INTEGER(11),
@@ -55,7 +56,8 @@ app.post('/register', function(req, res) {
             accomodation: req.body.accomodation,
             sex: req.body.sex,
             phone: req.body.phone,
-            events: req.body.events
+            events: req.body.events,
+            eventNames: req.body.eventNames
         });
     }).then(function(data) {
         var jsonData = data.get({
