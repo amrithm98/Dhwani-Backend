@@ -25,12 +25,12 @@ app.use(function(req, res, next) {
     next();
 });
 var user = sequelize.define('user', {
-    name: Sequelize.STRING,
-    email: Sequelize.STRING,
+    name: { type: Sequelize.STRING },
+    email: { type: Sequelize.STRING, unique: true },
     college: Sequelize.STRING,
     accomodation: Sequelize.ENUM('YES', 'NO'),
     sex: Sequelize.ENUM('MALE', 'FEMALE', 'OTHER'),
-    phone: Sequelize.BIGINT,
+    phone: { type: Sequelize.BIGINT, unique: true },
     events: Sequelize.STRING
 });
 var eventsTable = sequelize.define('eventsTable', {
