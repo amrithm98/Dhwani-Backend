@@ -2,6 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize('dhwani', 'juggleclouds', 'youcanthackthis');
+// var sequelize = new Sequelize('dhwani', 'root', 'linux4amrc');
+
 var app = express();
 var port = 11000;
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,12 +27,17 @@ app.use(function(req, res, next) {
     next();
 });
 var user = sequelize.define('user', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     name: { type: Sequelize.STRING },
-    email: { type: Sequelize.STRING, unique: true },
+    email: { type: Sequelize.STRING },
     college: Sequelize.STRING,
     accomodation: Sequelize.ENUM('YES', 'NO'),
     sex: Sequelize.ENUM('MALE', 'FEMALE', 'OTHER'),
-    phone: { type: Sequelize.BIGINT, unique: true },
+    phone: { type: Sequelize.STRING(20), unique: true },
     events: Sequelize.STRING
 });
 var eventsTable = sequelize.define('eventsTable', {
@@ -60,11 +67,11 @@ app.post('/register', function(req, res) {
         var jsonData = data.get({
             plain: true
         });
-        eventsRegistered = req.body.events;
-        var userId = jsonData.id;
-        var array = JSON.parse("[" + eventsRegistered + "]");
+        res.json({ "Success": true, "message": "User Added" });
+    }).catch(function(err) {
+        res.json({ "Success": false, "message": err });
+
     });
-    res.json({ "Success": true, "message": "User Added" });
 });
 app.get('/eventsList', function(req, res) {
     eventsTable.findAll({
@@ -87,6 +94,8 @@ app.post('/userDetails', function(req, res) {
             var response = data.get({ plain: true });
             console.log(response);
             res.json(response);
+        }).catch(function(err) {
+            res.json({ "Success": false, "error": err });
         });
     } else if (phone != null) {
         user.findOne({
@@ -100,7 +109,9 @@ app.post('/userDetails', function(req, res) {
                 res.json(response);
             } else
                 res.json({ "Success": false });
-        });
+        }).catch(function(err) {
+            res.json({ "Success": false, "error": err });
+        });;
     }
 });
 app.post('/getRegisteredEvents', function(req, res) {
@@ -128,7 +139,9 @@ app.post('/getRegisteredEvents', function(req, res) {
                 });
             } else
                 res.json({ "Success": false });
-        });
+        }).catch(function(err) {
+            res.json({ "Success": false, "error": err });
+        });;
     } else {
         res.json({ "Success": false });
 
