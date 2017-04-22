@@ -1,10 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var Sequelize = require('sequelize');
+var helmet = require('helmet');
+var json2csv = require('json2csv');
 var sequelize = new Sequelize('dhwani', 'juggleclouds', 'youcanthackthis');
 // var sequelize = new Sequelize('dhwani', 'root', 'linux4amrc');
 var app = express();
 var port = 11000;
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
@@ -146,7 +149,16 @@ app.post('/getRegisteredEvents', function(req, res) {
 app.get('/allUsers', function(req, res) {
     user.findAll().then(function(data) {
         res.json(data);
-    })
+    });
+});
+app.get('/getcsv', function(req, res) {
+    user.findAll({ raw: true }).then(function(data) {
+        var fields = ["id", "name", "email", "college", "accomodation", "sex", "phone", "events", "eventNames"];
+        var result = json2csv({ data: data, fields: fields });
+        res.setHeader('Content-disposition', 'attachment; filename=testing.csv');
+        res.set('Content-Type', 'text/csv');
+        res.status(200).send(result);
+    });
 });
 app.listen(port);
 console.log('Server up @ port ' + port)
